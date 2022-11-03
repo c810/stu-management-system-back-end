@@ -1,0 +1,5 @@
+spring:
+  profiles:
+    active: test
+# 线下测试时使用test,对应application-test.yml文件
+# 线上发布时使用active,对应application-active.yml文件
