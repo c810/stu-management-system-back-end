@@ -19,6 +19,15 @@ mybatis-plus:
       #配置mybatis plus 在更新时只更新非空和非NULL的字段
       update-strategy: not_empty
 
+#jwt配置
+jwt:
+  #颁发者
+  issuer: sdu
+  #秘钥
+  secret: com.sdu
+  #30分钟过期
+  expiration: 30
+
 logging:
   pattern:
     console: '%d{yyyy-MM-dd} [%thread] %-5level %logger- %msg%n'

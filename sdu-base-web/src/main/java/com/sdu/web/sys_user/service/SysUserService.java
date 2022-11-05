@@ -11,4 +11,8 @@ import com.sdu.web.sys_user.entity.SysUser;
  */
 public interface SysUserService extends IService<SysUser> {
     IPage<SysUser> list(PagePara para);
+    // 新增
+    void add(SysUser user);
+    // 编辑
+    void edit(SysUser user);
 }

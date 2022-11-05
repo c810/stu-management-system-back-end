@@ -1,6 +1,7 @@
 package com.sdu.web.sys_user.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -17,6 +18,8 @@ public class SysUser {
     // 主键,并且自动递增
     @TableId(type = IdType.AUTO)
     private Long userId; // 数据库中为user_id,要注意映射关系
+    @TableField(exist = false)
+    private Long roleId;
     private String username;
     private String password;
     private String phone;

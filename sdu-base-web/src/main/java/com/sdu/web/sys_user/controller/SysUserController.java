@@ -4,14 +4,19 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.sdu.utils.ResultUtils;
 import com.sdu.utils.ResultVo;
+import com.sdu.web.sys_role.entity.SysRole;
+import com.sdu.web.sys_role.service.SysRoleService;
 import com.sdu.web.sys_user.entity.PagePara;
 import com.sdu.web.sys_user.entity.SysUser;
 import com.sdu.web.sys_user.service.SysUserService;
+import com.sdu.web.sys_user_role.entity.SysUserRole;
+import com.sdu.web.sys_user_role.service.SysUserRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -23,6 +28,10 @@ import java.util.Objects;
 public class SysUserController {
     @Autowired
     private SysUserService sysUserService;
+    @Autowired
+    private SysRoleService sysRoleService;
+    @Autowired
+    private SysUserRoleService sysUserRoleService;
 
     // 新增用户
     // @RequestBody 注解:
@@ -48,11 +57,8 @@ public class SysUserController {
         user.setCreateTime(new Date());
 
         // 入库
-        boolean save = sysUserService.save(user);
-        if(save){
-            return ResultUtils.success("新增用户成功!");
-        }
-        return ResultUtils.error("新增用户失败!");
+        sysUserService.add(user);
+        return ResultUtils.success("新增用户成功!");
     }
 
     // 编辑用户
@@ -63,20 +69,17 @@ public class SysUserController {
         QueryWrapper<SysUser> query = new QueryWrapper<>();
         query.lambda().eq(SysUser::getUsername,user.getUsername());
         SysUser one = sysUserService.getOne(query);
-        if(one != null && !(one.getUserId() == user.getUserId())){
+        if(one != null && !Objects.equals(one.getUserId(), user.getUserId())){
             return ResultUtils.error("账户被占用!");
         }
         // 加密
-        user.setPassword(DigestUtils.md5DigestAsHex(user.getPassword().getBytes()));
+        // user.setPassword(DigestUtils.md5DigestAsHex(user.getPassword().getBytes()));
         // 设置时间
         user.setUpdateTime(new Date());
 
         // 更新
-        boolean save = sysUserService.updateById(user);
-        if(save){
-            return ResultUtils.success("编辑用户成功!");
-        }
-        return ResultUtils.error("编辑用户失败!");
+        sysUserService.edit(user);
+        return ResultUtils.success("编辑用户成功!");
     }
 
     // 删除用户
@@ -97,5 +100,21 @@ public class SysUserController {
             item.setPassword(""); // 不把密码返回前端
         });
         return ResultUtils.success("查询成功!",list);
+    }
+
+    // 角色列表
+    @GetMapping("/roleList")
+    public ResultVo getRoleList(){
+        List<SysRole> list = sysRoleService.list();
+        return ResultUtils.success("查询成功!",list);
+    }
+
+    // 根据用户的id查询角色的id
+    @GetMapping("/role")
+    public ResultVo getRoleById(Long userId){
+        QueryWrapper<SysUserRole> query = new QueryWrapper<>();
+        query.lambda().eq(SysUserRole::getUserId,userId);
+        SysUserRole one = sysUserRoleService.getOne(query);
+        return ResultUtils.success("查询成功!",one);
     }
 }

@@ -1,4 +1,4 @@
-package com.sdu.web.sys_role.entity;
+package com.sdu.web.school_college.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -9,16 +9,18 @@ import java.util.Date;
 
 /**
  * @author Connor
- * @date 2022/11/3 23:19
+ * @date 2022/11/5 15:41
  */
 @Data
-@TableName("sys_role")
-public class SysRole {
+@TableName("school_college")
+public class SchoolCollege {
+    // 主键
     @TableId(type = IdType.AUTO)
-    private Long roleId;
-    private String roleName;
-    private String roleType;
-    private String remark;
+    private Long collegeId;
+    // 学院名称
+    private String collegeName;
+    // 序号
+    private Integer orderNum;
+    // 创建时间
     private Date createTime;
-    private Date updateTime;
 }
