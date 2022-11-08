@@ -9,6 +9,8 @@ import com.sdu.web.class_course.entity.ClassCourseVo;
 import com.sdu.web.class_course.entity.ClassTree;
 import com.sdu.web.class_course.entity.ParaListVo;
 import com.sdu.web.class_course.service.ClassCourseService;
+import com.sdu.web.course_teacher.entity.CourseTeacher;
+import com.sdu.web.course_teacher.service.CourseTeacherService;
 import com.sdu.web.school_class.entity.SchoolClass;
 import com.sdu.web.school_class.service.SchoolClassService;
 import com.sdu.web.school_course.entity.SchoolCourse;
@@ -37,6 +39,8 @@ public class ClassCourseController {
     private SchoolCourseService schoolCourseService;
     @Autowired
     private ClassCourseService classCourseService;
+    @Autowired
+    private CourseTeacherService courseTeacherService;
 
     // 查询班级树
     @GetMapping("/getClassTree")
@@ -84,6 +88,13 @@ public class ClassCourseController {
     // 分配课程保存
     @PostMapping("/saveCourse")
     public ResultVo saveCourse(@RequestBody List<ClassCourse> list){
+        // TODO: 不知道为什么会服务器爆错
+//        for(int i = 0; i < list.size(); i++){
+//            QueryWrapper<CourseTeacher> query = new QueryWrapper<>();
+//            query.lambda().eq(CourseTeacher::getCourseId,list.get(i).getCourseId());
+//            CourseTeacher courseTeacher = courseTeacherService.getOne(query);
+//            list.get(i).setTeacherId(courseTeacher.getTeacherId());
+//        }
         classCourseService.saveBatch(list); // 批量保存
         return ResultUtils.success("分配成功!");
     }

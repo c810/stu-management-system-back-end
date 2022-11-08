@@ -16,4 +16,8 @@ public interface SysMenuService extends IService<SysMenu> {
     List<SysMenu> getMenuByUserId(Long userId);
     // 根据角色id查询权限
     List<SysMenu> getMenuByRoleId(Long roleId);
+    //根据学生id查询权限
+    List<SysMenu> getMenuByStuId(Long userId);
+    //根据教师id查询权限
+    List<SysMenu> getMenuByTeacherId(Long userId);
 }

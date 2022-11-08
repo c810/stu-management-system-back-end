@@ -32,4 +32,46 @@ public class MakeTree {
                 });
         return list;
     }
+
+    /**
+     * 生成路由数据格式
+     * @param menuList
+     * @param pid
+     * @return
+     */
+    public static List<RouterVo> makeRouter(List<SysMenu> menuList, Long pid){
+        // 接受生产的路由数据
+        List<RouterVo> list = new ArrayList<>();
+        // 组装数据
+        Optional.ofNullable(menuList).orElse(new ArrayList<>())
+                .stream()
+                .filter(item ->item != null && item.getParentId() == pid)
+                .forEach(item ->{
+                    RouterVo router = new RouterVo();
+                    router.setName(item.getName());
+                    router.setPath(item.getPath());
+                    // 判断是否是一级菜单
+                    if(item.getParentId() == 0L){
+                        router.setComponent("Layout");
+                        router.setAlwaysShow(true);
+                    }else{
+                        router.setComponent(item.getUrl());
+                        router.setAlwaysShow(false);
+                    }
+                    // 设置meta
+                    router.setMeta(router.new Meta(
+                            item.getTitle(),
+                            item.getIcon(),
+                            item.getCode().split(",")
+                    ));
+                    // 设置children
+                    List<RouterVo> children = makeRouter(menuList, item.getMenuId());
+                    router.setChildren(children);
+                    if(router.getChildren().size() > 0){
+                        router.setAlwaysShow(true);
+                    }
+                    list.add(router);
+                });
+        return list;
+    }
 }

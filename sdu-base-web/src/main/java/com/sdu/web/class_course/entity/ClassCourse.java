@@ -16,6 +16,7 @@ public class ClassCourse {
     private Long classCourseId;
     private Long classId;
     private Long courseId;
+    private Long teacherId;
     private String courseYear;
     private String type;
 }
