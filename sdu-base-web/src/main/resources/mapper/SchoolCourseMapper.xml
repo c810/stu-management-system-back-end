@@ -1,0 +1,15 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sdu.web.school_course.mapper.SchoolCourseMapper">
+    <select id="getCourseList" resultType="com.sdu.web.school_course.entity.SchoolCourse">
+        select sc.*,st.teacher_id,st.teacher_name from school_course as sc
+        left join course_teacher as ct on ct.course_id = sc.course_id
+        left join school_teacher  as st on st.teacher_id = ct.teacher_id
+        where 1=1
+        <if test="para.courseName != null and para.courseName !=''">
+            and sc.course_name like concat('%',#{para.courseName},'%')
+        </if>
+    </select>
+</mapper>

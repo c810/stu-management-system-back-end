@@ -1,0 +1,20 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sdu.web.class_course.mapper.ClassCourseMapper">
+    <select id="getCourseList" resultType="com.sdu.web.class_course.entity.ClassCourseVo">
+        select cc.class_course_id,sc.class_id,cc.course_id,cc.course_year,cc.type,scc.course_name,sc.class_name from
+        school_class as sc
+        inner join class_course as cc on cc.class_id = sc.class_id
+        inner join school_course as scc on scc.course_id = cc.course_id
+        where 1=1
+        <if test="para.courseName != null and para.courseName != ''">
+            and scc.course_name like concat('%',#{para.courseName},'%')
+        </if>
+        <if test="para.classId != null and para.classId != ''">
+            and sc.class_id =#{para.classId}
+        </if>
+        order by cc.course_year desc
+    </select>
+</mapper>

@@ -1,0 +1,22 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sdu.web.school_class.mapper.SchoolClassMapper">
+    <select id="getList" resultType="com.sdu.web.school_class.entity.SchoolClass">
+        select scc.college_name,sm.major_name,sc.* from school_class as sc
+        left join school_major  as sm on sc.major_id = sm.major_id
+        left join school_college as scc on scc.college_id = sm.college_id
+        where 1=1
+        <if test="para.collegeName != null and para.collegeName != ''">
+            and scc.college_name like concat('%',#{para.collegeName},'%')
+        </if>
+        <if test="para.majorName != null and para.majorName != ''">
+            and sm.major_name like concat('%',#{para.majorName},'%')
+        </if>
+        <if test="para.className != null and para.className != ''">
+            and sc.class_name like concat('%',#{para.className},'%')
+        </if>
+        order by sc.order_num desc
+    </select>
+</mapper>

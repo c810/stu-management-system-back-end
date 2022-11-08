@@ -13,5 +13,6 @@
         <if test="para.majorName != null and para.majorName !=''">
             and sm.major_name like concat('%',#{para.majorName},'%')
         </if>
+        order by sm.order_num desc
     </select>
 </mapper>

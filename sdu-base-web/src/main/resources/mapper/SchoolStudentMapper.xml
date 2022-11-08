@@ -1,0 +1,43 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sdu.web.school_student.mapper.SchoolStudentMapper">
+    <select id="getStuById" resultType="com.sdu.web.school_student.entity.SchoolStudent">
+        select st.*, sm.major_id, scc.college_id
+        from school_student as st
+        left join school_class as sc on sc.class_id = st.class_id
+        left join school_major as sm on sm.major_id = sc.major_id
+        left join school_college as scc on scc.college_id = sm.college_id
+        where st.stu_id = #{stuId}
+    </select>
+
+    <select id="getList" resultType="com.sdu.web.school_student.entity.SchoolStudent">
+        select st.* ,sm.major_id,sm.major_name,scc.college_id,scc.college_name,sc.class_name from school_student as st
+        left join school_class as sc on sc.class_id = st.class_id
+        left join school_major as sm on sm.major_id = sc.major_id
+        left join school_college as scc on scc.college_id = sm.college_id
+        where 1=1
+        <if test="para.collegeId != null and para.collegeId !=''">
+            and scc.college_id = #{para.collegeId}
+        </if>
+        <if test="para.majorId != null and para.majorId !=''">
+            and sm.major_id = #{para.majorId}
+        </if>
+        <if test="para.classId != null and para.classId !=''">
+            and sc.class_id = #{para.classId}
+        </if>
+        <if test="para.collegeName != null and para.collegeName !=''">
+            and scc.college_name like concat('%',#{para.collegeName},'%')
+        </if>
+        <if test="para.majorName != null and para.majorName !=''">
+            and sm.major_name like concat('%',#{para.majorName},'%')
+        </if>
+        <if test="para.className != null and para.className !=''">
+            and sc.class_name like concat('%',#{para.className},'%')
+        </if>
+        <if test="para.stuName != null and para.stuName !=''">
+            and st.stu_name like concat('%',#{para.stuName},'%')
+        </if>
+    </select>
+</mapper>
