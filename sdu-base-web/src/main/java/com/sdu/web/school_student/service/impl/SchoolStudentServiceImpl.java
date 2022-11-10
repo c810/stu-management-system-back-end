@@ -4,8 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.sdu.web.school_student.entity.SchoolStudent;
-import com.sdu.web.school_student.entity.StuPara;
+import com.sdu.web.school_student.entity.*;
 import com.sdu.web.school_student.mapper.SchoolStudentMapper;
 import com.sdu.web.school_student.service.SchoolStudentService;
 import com.sdu.web.stu_role.entity.StuRole;
@@ -13,6 +12,9 @@ import com.sdu.web.stu_role.service.StuRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Connor
@@ -78,6 +80,35 @@ public class SchoolStudentServiceImpl extends ServiceImpl<SchoolStudentMapper, S
             query.lambda().eq(StuRole::getStuId, stuId);
             stuRoleService.remove(query);
         }
+    }
+
+    @Override
+    public IPage<MyCourseVo> getCourseList(CoursePara para) {
+        // 构造分页对象
+        IPage<MyCourseVo> page = new Page<>(para.getCurrentPage(),para.getPageSize());
+        return this.baseMapper.getCourseList(page,para);
+    }
+
+    @Override
+    public StuCount getStuCount() {
+        List<StuCountVo> stuCountVos = this.baseMapper.getStuCount();
+        StuCount stuCount = new StuCount();
+        List<Integer> count = new ArrayList<>();
+        List<String> names = new ArrayList<>();
+        if(stuCountVos.size() >0){
+            for (int i=0;i<stuCountVos.size();i++){
+                count.add(stuCountVos.get(i).getStuCount());
+                names.add(stuCountVos.get(i).getClassYear());
+            }
+        }
+        stuCount.setCount(count);
+        stuCount.setNames(names);
+        return stuCount;
+    }
+
+    @Override
+    public List<HotMajorVo> getHotMajor() {
+        return this.baseMapper.getHotMajor();
     }
 }
 

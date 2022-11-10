@@ -17,4 +17,14 @@
         </if>
         order by cc.course_year desc
     </select>
+    <select id="getTeacherCourse" resultType="com.sdu.web.class_course.entity.ClassCourse">
+        select cc.*,sc.course_name,scc.class_name,scc.class_year from class_course as cc
+        inner join school_course as sc on sc.course_id = cc.course_id
+        inner join school_class as scc on scc.class_id = cc.class_id
+        where cc.teacher_id =#{para.teacherId}
+        <if test="para.courseName != null and para.courseName != ''">
+            and sc.course_name like concat('%',#{para.courseName},'%')
+        </if>
+        order by scc.class_year desc,cc.course_year desc,cc.type asc
+    </select>
 </mapper>

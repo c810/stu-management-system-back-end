@@ -5,11 +5,15 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sdu.web.school_teacher.entity.SchoolTeacher;
 import com.sdu.web.school_teacher.mapper.SchoolTeacherMapper;
 import com.sdu.web.school_teacher.service.SchoolTeacherService;
+import com.sdu.web.stu_points.entity.StuPoints;
+import com.sdu.web.stu_points.service.StuPointsService;
 import com.sdu.web.teacher_role.entity.TeacherRole;
 import com.sdu.web.teacher_role.service.TeacherRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * @author Connor
@@ -19,6 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class SchoolTeacherServiceImpl extends ServiceImpl<SchoolTeacherMapper, SchoolTeacher> implements SchoolTeacherService {
     @Autowired
     private TeacherRoleService teacherRoleService;
+    @Autowired
+    private StuPointsService stuPointsService;
 
     @Override
     @Transactional
@@ -60,5 +66,17 @@ public class SchoolTeacherServiceImpl extends ServiceImpl<SchoolTeacherMapper, S
             query.lambda().eq(TeacherRole::getTeacherId, teacherId);
             teacherRoleService.remove(query);
         }
+    }
+
+    @Override
+    @Transactional
+    public void savePoint(List<StuPoints> list, Long classId, Long courseId) {
+        // 先删除
+        QueryWrapper<StuPoints> query = new QueryWrapper<>();
+        query.lambda().eq(StuPoints::getClassId,classId).eq(StuPoints::getCourseId,courseId);
+        stuPointsService.remove(query);
+        // 批量保存
+        stuPointsService.saveBatch(list);
+
     }
 }

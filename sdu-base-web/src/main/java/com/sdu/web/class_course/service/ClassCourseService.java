@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.sdu.web.class_course.entity.ClassCourse;
 import com.sdu.web.class_course.entity.ClassCourseVo;
 import com.sdu.web.class_course.entity.ParaListVo;
+import com.sdu.web.class_course.entity.TeacherCourseVo;
 
 /**
  * @author Connor
@@ -12,4 +13,5 @@ import com.sdu.web.class_course.entity.ParaListVo;
  */
 public interface ClassCourseService extends IService<ClassCourse> {
     IPage<ClassCourseVo> getCourseList(ParaListVo para);
+    IPage<ClassCourse> getTeacherCourse(TeacherCourseVo para);
 }

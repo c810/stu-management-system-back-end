@@ -4,13 +4,13 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.sdu.config.jwt.JwtUtils;
 import com.sdu.utils.ResultUtils;
 import com.sdu.utils.ResultVo;
+import com.sdu.web.school_class.service.SchoolClassService;
+import com.sdu.web.school_major.service.SchoolMajorService;
 import com.sdu.web.school_student.entity.SchoolStudent;
 import com.sdu.web.school_student.service.SchoolStudentService;
 import com.sdu.web.school_teacher.entity.SchoolTeacher;
 import com.sdu.web.school_teacher.service.SchoolTeacherService;
-import com.sdu.web.sys_login.entity.LoginPara;
-import com.sdu.web.sys_login.entity.LoginResult;
-import com.sdu.web.sys_login.entity.UserInfo;
+import com.sdu.web.sys_login.entity.*;
 import com.sdu.web.sys_menu.entity.MakeTree;
 import com.sdu.web.sys_menu.entity.RouterVo;
 import com.sdu.web.sys_menu.entity.SysMenu;
@@ -42,6 +42,10 @@ public class LoginController {
     private SchoolTeacherService schoolTeacherService;
     @Autowired
     private SysMenuService sysMenuService;
+    @Autowired
+    private SchoolClassService schoolClassService;
+    @Autowired
+    private SchoolMajorService schoolMajorService;
     @Autowired
     private JwtUtils jwtUtils;
 
@@ -194,6 +198,11 @@ public class LoginController {
         }
     }
 
+    /**
+     * 获取菜单
+     * @param loginPara
+     * @return
+     */
     @GetMapping("/getMenuList")
     public ResultVo getMenuList(LoginResult loginPara) {
         if (loginPara.getUserType().equals("0")) {
@@ -240,5 +249,70 @@ public class LoginController {
         } else {
             return ResultUtils.success("用户类型不存在!");
         }
+    }
+
+    /**
+     * 修改密码
+     * @param para
+     * @return
+     */
+    @PostMapping("/updatePassword")
+    public ResultVo UpdatePassword(@RequestBody UpdatePasswordPara para) {
+        String old = DigestUtils.md5DigestAsHex(para.getOldPassword().getBytes());
+        if (para.getUserType().equals("0")) { // 学生
+            SchoolStudent student = schoolStudentService.getById(para.getUserId());
+            if (!student.getPassword().equals(old)) {
+                return ResultUtils.error("原密码错误!");
+            }
+            SchoolStudent student1 = new SchoolStudent();
+            student1.setStuId(student.getStuId());
+            student1.setPassword(DigestUtils.md5DigestAsHex(para.getNewPassword().getBytes()));
+            schoolStudentService.updateById(student1);
+            return ResultUtils.success("密码更新成功!");
+        } else if (para.getUserType().equals("1")) { // 教师
+            SchoolTeacher teacher = schoolTeacherService.getById(para.getUserId());
+            if (!teacher.getPassword().equals(old)) {
+                return ResultUtils.error("原密码错误!");
+            }
+            SchoolTeacher teacher1 = new SchoolTeacher();
+            teacher1.setTeacherId(teacher.getTeacherId());
+            teacher1.setPassword(DigestUtils.md5DigestAsHex(para.getNewPassword().getBytes()));
+            schoolTeacherService.updateById(teacher1);
+            return ResultUtils.success("密码更新成功!");
+        } else if (para.getUserType().equals("2")) { // 管理员
+            SysUser user = sysUserService.getById(para.getUserId());
+            if (!user.getPassword().equals(old)) {
+                return ResultUtils.error("原密码错误!");
+            }
+            SysUser user1 = new SysUser();
+            user1.setUserId(user.getUserId());
+            user1.setPassword(DigestUtils.md5DigestAsHex(para.getNewPassword().getBytes()));
+            sysUserService.updateById(user1);
+            return ResultUtils.success("密码更新成功!");
+        } else {
+            return ResultUtils.error("用户类型错误!");
+        }
+    }
+
+    /**
+     * 首页总数统计
+     * @return
+     */
+    @GetMapping("/getHomeCount")
+    public ResultVo getHomeCount(){
+        CountVo countVo = new CountVo();
+        // 学生总数
+        int stuCount = schoolStudentService.count();
+        countVo.setStuCount(stuCount);
+        // 班级总数
+        int classCount = schoolClassService.count();
+        countVo.setClassCount(classCount);
+        // 专业总数
+        int majorCount = schoolMajorService.count();
+        countVo.setMajorCount(majorCount);
+        // 教师总数
+        int teacherCount = schoolTeacherService.count();
+        countVo.setTeacherCount(teacherCount);
+        return ResultUtils.success("查询成功!",countVo);
     }
 }

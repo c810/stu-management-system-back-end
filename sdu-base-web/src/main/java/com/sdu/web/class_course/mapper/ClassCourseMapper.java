@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.sdu.web.class_course.entity.ClassCourse;
 import com.sdu.web.class_course.entity.ClassCourseVo;
 import com.sdu.web.class_course.entity.ParaListVo;
+import com.sdu.web.class_course.entity.TeacherCourseVo;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -13,5 +14,6 @@ import org.apache.ibatis.annotations.Param;
  */
 public interface ClassCourseMapper extends BaseMapper<ClassCourse> {
     IPage<ClassCourseVo> getCourseList(IPage<ClassCourseVo> page, @Param("para") ParaListVo para);
+    IPage<ClassCourse> getTeacherCourse(IPage<ClassCourse> page, @Param("para") TeacherCourseVo para);
 }
 

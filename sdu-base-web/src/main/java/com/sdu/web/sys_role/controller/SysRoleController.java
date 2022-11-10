@@ -1,5 +1,6 @@
 package com.sdu.web.sys_role.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.sdu.utils.ResultUtils;
 import com.sdu.utils.ResultVo;
@@ -26,6 +27,13 @@ public class SysRoleController {
     // 新增角色
     @PostMapping
     public ResultVo addRole(@RequestBody SysRole role) {
+        // 判断学生角色是否存在
+        QueryWrapper<SysRole> query = new QueryWrapper<>();
+        query.lambda().eq(SysRole::getRoleType,"2");
+        SysRole one = sysRoleService.getOne(query);
+        if(one != null && role.getRoleType().equals("2")){
+            return ResultUtils.error("学生角色已经存在!");
+        }
         // 设置时间
         role.setCreateTime(new Date());
         boolean save = sysRoleService.save(role);
@@ -38,6 +46,13 @@ public class SysRoleController {
     // 编辑角色
     @PutMapping
     public ResultVo editRole(@RequestBody SysRole role) {
+        // 判断学生角色是否存在
+        QueryWrapper<SysRole> query = new QueryWrapper<>();
+        query.lambda().eq(SysRole::getRoleType,"2");
+        SysRole one = sysRoleService.getOne(query);
+        if(one != null && role.getRoleType().equals("2") && !role.getRoleId().equals(one.getRoleId())){
+            return ResultUtils.error("学生角色已经存在!");
+        }
         // 更新时间
         role.setUpdateTime(new Date());
         boolean save = sysRoleService.updateById(role);

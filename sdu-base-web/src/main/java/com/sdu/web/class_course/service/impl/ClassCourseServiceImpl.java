@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sdu.web.class_course.entity.ClassCourse;
 import com.sdu.web.class_course.entity.ClassCourseVo;
 import com.sdu.web.class_course.entity.ParaListVo;
+import com.sdu.web.class_course.entity.TeacherCourseVo;
 import com.sdu.web.class_course.mapper.ClassCourseMapper;
 import com.sdu.web.class_course.service.ClassCourseService;
 import org.springframework.stereotype.Service;
@@ -21,5 +22,12 @@ public class ClassCourseServiceImpl extends ServiceImpl<ClassCourseMapper, Class
         // 构造分页对象
         IPage<ClassCourseVo> page = new Page<>(para.getCurrentPage(),para.getPageSize());
         return this.baseMapper.getCourseList(page,para);
+    }
+
+    @Override
+    public IPage<ClassCourse> getTeacherCourse(TeacherCourseVo para) {
+        // 构造分页对象
+        IPage<ClassCourse> page = new Page<>(para.getCurrentPage(),para.getPageSize());
+        return this.baseMapper.getTeacherCourse(page,para);
     }
 }

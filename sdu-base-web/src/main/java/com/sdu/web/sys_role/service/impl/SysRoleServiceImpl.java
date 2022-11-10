@@ -56,7 +56,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
 
         // 判断用户是否是超级管理员
         List<SysMenu> list = null; // 菜单数据
-        if(user.getIsAdmin().equals("2")){ // 如果是超级管理员,拥有所有的权限
+        if(user.getIsAdmin().equals("1")){ // 如果是超级管理员,拥有所有的权限
             QueryWrapper<SysMenu> query = new QueryWrapper<>();
             query.lambda().orderByAsc(SysMenu::getOrderNum);
             list = sysMenuService.list(query);

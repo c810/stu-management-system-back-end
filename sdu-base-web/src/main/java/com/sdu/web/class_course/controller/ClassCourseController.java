@@ -89,12 +89,12 @@ public class ClassCourseController {
     @PostMapping("/saveCourse")
     public ResultVo saveCourse(@RequestBody List<ClassCourse> list){
         // TODO: 不知道为什么会服务器爆错
-//        for(int i = 0; i < list.size(); i++){
-//            QueryWrapper<CourseTeacher> query = new QueryWrapper<>();
-//            query.lambda().eq(CourseTeacher::getCourseId,list.get(i).getCourseId());
-//            CourseTeacher courseTeacher = courseTeacherService.getOne(query);
-//            list.get(i).setTeacherId(courseTeacher.getTeacherId());
-//        }
+        for(int i = 0; i < list.size(); i++){
+            QueryWrapper<CourseTeacher> query = new QueryWrapper<>();
+            query.lambda().eq(CourseTeacher::getCourseId,list.get(i).getCourseId());
+            CourseTeacher courseTeacher = courseTeacherService.getOne(query);
+            list.get(i).setTeacherId(courseTeacher.getTeacherId());
+        }
         classCourseService.saveBatch(list); // 批量保存
         return ResultUtils.success("分配成功!");
     }
