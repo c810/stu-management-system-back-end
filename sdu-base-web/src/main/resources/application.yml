@@ -3,3 +3,17 @@ spring:
     active: test
 # 线下测试时使用test,对应application-test.yml文件
 # 线上发布时使用active,对应application-active.yml文件
+
+  mail:
+    username: 752869332@qq.com
+    password: twggcmxvrquxbbgj
+    host: smtp.qq.com
+    protocol: smtp
+    default-encoding: UTF-8
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+      mail.smtp.starttls.required: true
+      mail.smtp.socketFactory.port: 465 #协议为SMTP是SSL端口号465
+      mail.smtp.socketFactory.class: javax.net.ssl.SSLSocketFactory
+      mail.smtp.socketFactory.fallback: false

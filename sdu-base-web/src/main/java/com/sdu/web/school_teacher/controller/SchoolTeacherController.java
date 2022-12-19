@@ -115,6 +115,13 @@ public class SchoolTeacherController {
         return ResultUtils.success("查询成功!",list);
     }
 
+    // 根据教师id查询教师
+    @GetMapping("/getTeacherById")
+    public ResultVo getTeacherById(Long teacherId){
+        SchoolTeacher teacher = schoolTeacherService.getById(teacherId);
+        return ResultUtils.success("查询成功!",teacher);
+    }
+
     // 角色列表
     @GetMapping("/getRole")
     public ResultVo getRole(){

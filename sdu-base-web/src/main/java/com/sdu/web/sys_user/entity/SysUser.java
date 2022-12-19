@@ -39,4 +39,7 @@ public class SysUser {
     private Date createTime;
     //更新时间
     private Date updateTime;
+    @TableField(exist = false)
+    private String code;
+    
 }

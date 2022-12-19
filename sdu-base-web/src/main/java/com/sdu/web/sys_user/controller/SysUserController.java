@@ -109,12 +109,31 @@ public class SysUserController {
         return ResultUtils.success("查询成功!",list);
     }
 
+    // 获取管理员角色
+    @GetMapping("/getSysUserRole")
+    public ResultVo getSysUserRole(){
+        QueryWrapper<SysRole> query = new QueryWrapper<>();
+        query.lambda().eq(SysRole::getRoleType,"1");
+        SysRole one = sysRoleService.getOne(query);
+        return ResultUtils.success("查询成功!",one);
+    }
+
     // 根据用户的id查询角色的id
     @GetMapping("/role")
     public ResultVo getRoleById(Long userId){
         QueryWrapper<SysUserRole> query = new QueryWrapper<>();
         query.lambda().eq(SysUserRole::getUserId,userId);
         SysUserRole one = sysUserRoleService.getOne(query);
+        return ResultUtils.success("查询成功!",one);
+    }
+
+    // 根据用户的id查询用户姓名
+    @GetMapping("/getUserById")
+    public ResultVo getUserById(Long userId){
+        /*QueryWrapper<SysUser> query = new QueryWrapper<>();
+        query.lambda().eq(SysUser::getUserId,userId);
+        SysUser one = sysUserService.getOne(query);*/
+        SysUser one = sysUserService.getById(userId);
         return ResultUtils.success("查询成功!",one);
     }
 }

@@ -64,10 +64,12 @@
     </select>
 
     <select id="getHotMajor" resultType="com.sdu.web.school_student.entity.HotMajorVo">
-        select sm.major_name as name,count(st.stu_id) as value from school_major as sm
-            inner join school_class as sc on sc.major_id = sm.major_id
+        select sm.major_name as name, count(st.stu_id) as value
+        from school_major as sm
+            inner join school_class as sc
+        on sc.major_id = sm.major_id
             inner join school_student as st on st.class_id = sc.class_id
-        group by sm.major_id,sm.major_name
+        group by sm.major_id, sm.major_name
         order by value desc
             limit 5
     </select>

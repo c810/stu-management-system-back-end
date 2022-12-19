@@ -82,6 +82,15 @@ public class ClassCourseController {
     @GetMapping("/getCourseList")
     public ResultVo getCourseList(){
         List<SchoolCourse> list = schoolCourseService.list();
+
+        return ResultUtils.success("查询成功!",list);
+    }
+
+    // 查询课程列表
+    @GetMapping("/getCourseListByClassId")
+    public ResultVo getCourseListByClassId(Long classId){
+        List<SchoolCourse> list = schoolCourseService.list();
+
         return ResultUtils.success("查询成功!",list);
     }
 

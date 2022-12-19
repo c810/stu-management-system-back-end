@@ -1,0 +1,26 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sdu.web.act_practice.mapper.ActPracticeMapper">
+    <select id="getPracticeList" resultType="com.sdu.web.act_practice.entity.ActPractice">
+        select ap.*,st.stu_name,st.stu_num,st.stu_id from act_practice as ap
+        left join school_student  as st on st.stu_num = ap.stu_num
+        where 1=1
+        <if test="para.practiceName != null and para.practiceName !=''">
+            and ap.practice_name like concat('%',#{para.practiceName},'%')
+        </if>
+        <if test="para.practiceType != null and para.practiceType !=''">
+            and ap.practice_type like concat('%',#{para.practiceType},'%')
+        </if>
+        <if test="para.stuNum != null and para.stuNum !=''">
+            and st.stu_num like concat('%',#{para.stuNum},'%')
+        </if>
+        <if test="para.stuId != null and para.stuId !=''">
+            and st.stu_id like concat('%',#{para.stuId},'%')
+        </if>
+        <if test="para.practiceTime != null and para.practiceTime !=''">
+            and ap.practice_time like concat('%',#{para.practiceTime},'%')
+        </if>
+    </select>
+</mapper>

@@ -1,6 +1,7 @@
 package com.sdu.web.school_teacher.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.sdu.web.school_student.entity.SchoolStudent;
 import com.sdu.web.school_teacher.entity.SchoolTeacher;
 import com.sdu.web.stu_points.entity.StuPoints;
 

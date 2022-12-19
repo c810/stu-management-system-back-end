@@ -1,0 +1,29 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sdu.web.act_event.mapper.ActEventMapper">
+    <select id="getEventList" resultType="com.sdu.web.act_event.entity.ActEvent">
+        select ae.*,st.stu_name,st.stu_num,st.stu_id from act_event as ae
+        left join school_student  as st on st.stu_num = ae.stu_num
+        where 1=1
+        <if test="para.eventName != null and para.eventName !=''">
+            and ae.event_name like concat('%',#{para.eventName},'%')
+        </if>
+        <if test="para.eventType != null and para.eventType !=''">
+            and ae.event_type like concat('%',#{para.eventType},'%')
+        </if>
+        <if test="para.stuNum != null and para.stuNum !=''">
+            and st.stu_num like concat('%',#{para.stuNum},'%')
+        </if>
+        <if test="para.stuId != null and para.stuId !=''">
+            and st.stu_id like concat('%',#{para.stuId},'%')
+        </if>
+        <if test="para.eventStart != null and para.eventStart !=''">
+            and ae.event_start like concat('%',#{para.eventStart},'%')
+        </if>
+        <if test="para.eventEnd != null and para.eventEnd !=''">
+            and ae.event_end like concat('%',#{para.eventEnd},'%')
+        </if>
+    </select>
+</mapper>

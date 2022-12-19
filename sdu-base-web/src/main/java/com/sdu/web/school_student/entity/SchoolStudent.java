@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
+import java.util.Date;
+
 /**
  * @author Connor
  * @date 2022/11/6 12:38
@@ -34,4 +36,16 @@ public class SchoolStudent {
     private String collegeName;
     @TableField(exist = false)
     private String className;
+    private String email;
+    private String politicalFace;
+    private String nativePlace;
+    private Date birthday;
+    private String nation;
+    private String hobby;
+    private String eduBackground;
+    private String idCard;
+    private String maritalStatus;
+    private String selfDescribe;
+    private String signature;
+    private String location;
 }

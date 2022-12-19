@@ -15,7 +15,7 @@ public interface SchoolStudentService extends IService<SchoolStudent> {
     void addStu(SchoolStudent schoolStudent);
     // 编辑
     void editStu(SchoolStudent schoolStudent);
-    // 根据用户id查询用户信息
+    // 根据学生id查询学生信息
     SchoolStudent getStuById(Long stuId);
     // 列表
     IPage<SchoolStudent> getList(StuPara para);

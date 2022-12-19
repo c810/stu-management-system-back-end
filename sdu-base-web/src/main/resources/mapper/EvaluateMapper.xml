@@ -1,0 +1,21 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sdu.web.evaluate.mapper.EvaluateMapper">
+    <select id="getTeacherList" resultType="com.sdu.web.evaluate.entity.EvaluateVo">
+        select stt.teacher_id,stt.teacher_name, sc.course_name
+        from school_student as st
+        inner join class_course as cc on cc.class_id = st.class_id
+        inner join school_course as sc on sc.course_id = cc.course_id
+        inner join school_teacher as stt on stt.teacher_id = cc.teacher_id
+        where st.stu_id = #{para.stuId}
+        <if test="para.teacherName != null and para.teacherName != ''">
+            and stt.teacher_name like concat('%',#{para.teacherName},'%')
+        </if>
+    </select>
+
+    <select id="getMyEvaluateList" resultType="com.sdu.web.evaluate.entity.Evaluate">
+        select e.* from evaluate as e where e.teacher_id = #{para.teacherId} order by e.evaluate_date desc
+    </select>
+</mapper>

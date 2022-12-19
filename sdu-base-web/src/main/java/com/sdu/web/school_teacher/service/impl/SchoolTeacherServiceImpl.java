@@ -2,6 +2,7 @@ package com.sdu.web.school_teacher.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.sdu.web.school_student.entity.SchoolStudent;
 import com.sdu.web.school_teacher.entity.SchoolTeacher;
 import com.sdu.web.school_teacher.mapper.SchoolTeacherMapper;
 import com.sdu.web.school_teacher.service.SchoolTeacherService;
@@ -77,6 +78,5 @@ public class SchoolTeacherServiceImpl extends ServiceImpl<SchoolTeacherMapper, S
         stuPointsService.remove(query);
         // 批量保存
         stuPointsService.saveBatch(list);
-
     }
 }

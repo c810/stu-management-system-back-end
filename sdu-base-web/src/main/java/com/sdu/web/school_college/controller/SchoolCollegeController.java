@@ -8,6 +8,7 @@ import com.sdu.utils.ResultVo;
 import com.sdu.web.school_college.entity.ListPara;
 import com.sdu.web.school_college.entity.SchoolCollege;
 import com.sdu.web.school_college.service.SchoolCollegeService;
+import com.sdu.web.school_student.entity.SchoolStudent;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -70,4 +71,12 @@ public class SchoolCollegeController {
         IPage list = schoolCollegeService.page(page, query);
         return ResultUtils.success("查询成功!",list);
     }
+
+    // 根据id查询名称
+    @GetMapping("/getCollegeNameById")
+    public ResultVo getCollegeNameById(Long collegeId){
+        SchoolCollege college = schoolCollegeService.getById(collegeId);
+        return ResultUtils.success("查询成功!",college);
+    }
+
 }

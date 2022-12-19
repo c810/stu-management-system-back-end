@@ -12,6 +12,8 @@ import com.sdu.utils.ResultUtils;
 import com.sdu.utils.ResultVo;
 import com.sdu.web.school_class.entity.SchoolClass;
 import com.sdu.web.school_class.service.SchoolClassService;
+import com.sdu.web.school_college.entity.SchoolCollege;
+import com.sdu.web.school_college.service.SchoolCollegeService;
 import com.sdu.web.school_student.entity.*;
 import com.sdu.web.school_student.service.SchoolStudentService;
 import com.sdu.web.stu_role.entity.StuRole;
@@ -41,6 +43,8 @@ public class SchoolStudentController {
     @Autowired
     private SchoolStudentService schoolStudentService;
     @Autowired
+    private SchoolCollegeService schoolCollegeService;
+    @Autowired
     private SchoolClassService schoolClassService;
     @Autowired
     private SysRoleService sysRoleService;
@@ -50,12 +54,27 @@ public class SchoolStudentController {
     // 新增
     @PostMapping
     public ResultVo add(@RequestBody SchoolStudent schoolStudent){
-        QueryWrapper<SchoolStudent> query = new QueryWrapper<>();
+
+/*        QueryWrapper<SchoolStudent> query = new QueryWrapper<>();
         query.lambda().eq(SchoolStudent::getStuNum,schoolStudent.getStuNum());
         SchoolStudent one = schoolStudentService.getOne(query);
         if(one != null){
             return ResultUtils.error("学生学号重复!");
+        }*/
+
+        SchoolCollege college = schoolCollegeService.getById(schoolStudent.getCollegeId());
+        String stuNum = schoolStudent.getIntoTime().substring(0,4)+String.format("%03d", college.getOrderNum());
+
+        QueryWrapper<SchoolStudent> queryWrapper= new QueryWrapper<>();
+        queryWrapper.lambda().like(SchoolStudent::getStuNum,stuNum).orderByDesc(SchoolStudent::getStuNum).last("limit 0,1");
+        SchoolStudent stu = schoolStudentService.getOne(queryWrapper);
+        long num;
+        if(stu == null){
+            num = Long.parseLong(stuNum+"00001");
+        }else {
+            num = Long.parseLong(stu.getStuNum()) + 1;
         }
+        schoolStudent.setStuNum(Long.toString(num));
         schoolStudent.setPassword(DigestUtils.md5DigestAsHex(schoolStudent.getPassword().getBytes()));
         schoolStudentService.addStu(schoolStudent);
         return ResultUtils.success("新增成功!");
@@ -149,12 +168,12 @@ public class SchoolStudentController {
     @RequestMapping("/importStuTemplate")
     public void importStuTemplate(HttpServletResponse response) throws Exception {
         // 导出excel，组装数据
-        List<StuExcel> list = new ArrayList<>();
+        List<StuExcel2> list = new ArrayList<>();
         // 导出
         String fileName =  "学生信息模板.xlsx";
         ExportParams exportParams = new ExportParams();
         exportParams.setType(ExcelType.XSSF);
-        Workbook workbook = ExcelExportUtil.exportExcel(exportParams, StuExcel.class, list);
+        Workbook workbook = ExcelExportUtil.exportExcel(exportParams, StuExcel2.class, list);
         downloadExcel(fileName, workbook, response);
     }
 
@@ -167,12 +186,12 @@ public class SchoolStudentController {
      * @throws Exception
      */
     @RequestMapping("/importStuInfo")
-    public ResultVo importStuInfo(@RequestParam("file") MultipartFile file, Long classId, String intoTime) throws Exception {
+    public ResultVo importStuInfo(@RequestParam("file") MultipartFile file, Long classId, Long collegeId, String intoTime) throws Exception {
         ImportParams importParams = new ImportParams();
         // 数据处理
         importParams.setHeadRows(1);
-        ExcelImportResult<StuExcel> result = ExcelImportUtil.importExcelMore(file.getInputStream(), StuExcel.class, importParams);
-        List<StuExcel> list = result.getList();
+        ExcelImportResult<StuExcel2> result = ExcelImportUtil.importExcelMore(file.getInputStream(), StuExcel2.class, importParams);
+        List<StuExcel2> list = result.getList();
         if (list.size() == 0) {
             return ResultUtils.error("请录入学生信息!");
         }
@@ -183,6 +202,20 @@ public class SchoolStudentController {
         if(one == null){
             return ResultUtils.error("请先到角色管理创建学生角色!");
         }
+
+        SchoolCollege college = schoolCollegeService.getById(collegeId);
+        String stuNum = intoTime.substring(0,4)+String.format("%03d", college.getOrderNum());
+
+        QueryWrapper<SchoolStudent> queryWrapper= new QueryWrapper<>();
+        queryWrapper.lambda().like(SchoolStudent::getStuNum,stuNum).orderByDesc(SchoolStudent::getStuNum).last("limit 0,1");
+        SchoolStudent stu = schoolStudentService.getOne(queryWrapper);
+        long num;
+        if(stu == null){
+            num = Long.parseLong(stuNum+"00000");
+        }else {
+            num = Long.parseLong(stu.getStuNum());
+        }
+
         // 查询学生
         for (int i = 0; i < list.size(); i++) {
             SchoolStudent student = new SchoolStudent();
@@ -191,7 +224,8 @@ public class SchoolStudentController {
             student.setClassId(classId);
             student.setIntoTime(intoTime);
             student.setPassword(DigestUtils.md5DigestAsHex("123456".getBytes()));
-            student.setStuNum(Integer.toString((int)((Math.random()*9+1)*100000)));
+
+            student.setStuNum(Long.toString(++num));
             schoolStudentService.addStu(student);
         }
         return ResultUtils.success("导入成功!");

@@ -67,4 +67,11 @@ public class SchoolMajorController {
         List<SchoolCollege> list = schoolCollegeService.list();
         return ResultUtils.success("查询成功!",list);
     }
+
+    // 根据id查询名称
+    @GetMapping("/getMajorNameById")
+    public ResultVo getMajorNameById(Long majorId){
+        SchoolMajor major = schoolMajorService.getById(majorId);
+        return ResultUtils.success("查询成功!",major);
+    }
 }
